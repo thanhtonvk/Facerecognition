@@ -61,7 +61,7 @@ class DiemDanhDal:
 
     def diem_danh(self, id_sv):
         query = "insert into DiemDanh(IdSinhVien,NgayDiemDanh) values(?,?)"
-        if kiem_tra_diem_danh(id_sv):
+        if kiem_tra_diem_danh(id_sv,self.get_all()):
             try:
                 conn = sqlite3.connect(config.DATABASE)
                 today = date.today()

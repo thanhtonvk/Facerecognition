@@ -33,6 +33,8 @@ class FaceRecognition:
             file_names = os.listdir(path)
             for file in file_names:
                 face = cv2.imread(f"{path}/{file}")
-                if self.compare(current_face, face) > 0.8:
+                cos_sim = self.compare(current_face, face)
+                print(cos_sim)
+                if cos_sim > 0.7:
                     return sinh_vien
         return None

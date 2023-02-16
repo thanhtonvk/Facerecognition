@@ -21,21 +21,21 @@ if __name__ == '__main__':
         # Capture the video frame
         # by frame
         ret, frame = vid.read()
-        if frame % 3 == 0:
-            predict = face_detector.detect(frame)
-            boxes = predict['boxes']
-            faces = predict['faces']
-            for idx, (x, y, w, h) in enumerate(boxes):
-                cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
-                face = faces[idx]
-                sinh_vien = face_recognition.search_face(face, sinh_viens)
-                if sinh_vien is not None:
-                    if diem_danh_dal.diem_danh(sinh_vien.Id):
-                        cv2.putText(frame, f"{sinh_vien.HoTen}-{sinh_vien.Id} : Thành công",
-                                    (x, y), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 1, cv2.LINE_AA)
-                    else:
-                        cv2.putText(frame, f"{sinh_vien.HoTen}-{sinh_vien.Id} : Đã điểm danh",
-                                    (x, y), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 1, cv2.LINE_AA)
+
+        predict = face_detector.detect(frame)
+        boxes = predict['boxes']
+        faces = predict['faces']
+        for idx, (x, y, w, h) in enumerate(boxes):
+            cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
+            face = faces[idx]
+            sinh_vien = face_recognition.search_face(face, sinh_viens)
+            if sinh_vien is not None:
+                if diem_danh_dal.diem_danh(sinh_vien.Id):
+                    cv2.putText(frame, f"{sinh_vien.HoTen}-{sinh_vien.Id} : Thanh cong",
+                                (x, y), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 1, cv2.LINE_AA)
+                else:
+                    cv2.putText(frame, f"{sinh_vien.HoTen}-{sinh_vien.Id} : Da diem danh",
+                                (x, y), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 1, cv2.LINE_AA)
         cv2.imshow('Điểm danh bằng khuôn mặt', frame)
         count += 1
         if cv2.waitKey(1) & 0xFF == ord('q'):

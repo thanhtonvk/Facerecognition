@@ -29,6 +29,7 @@ def them_sv():
             os.mkdir(app.config['UPLOAD_VIDEO']+"/videos/"+str(sinhVien.Id))
             save_path = os.path.join(app.config['UPLOAD_VIDEO']+"/videos/"+str(sinhVien.Id), file_name)
         except:
+           
             print('err')
         f.save(save_path)
         faceDetector.save_face_from_video(sinhVien.Id,save_path)
