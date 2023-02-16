@@ -1,5 +1,5 @@
 import cv2
-
+import os
 
 def get_model():
     faceCascade = cv2.CascadeClassifier('./models/face_detection.xml')
@@ -35,6 +35,29 @@ class FaceDetector:
             minSize=(15, 15),
             flags=cv2.CASCADE_SCALE_IMAGE)
         return {'faces': crop_face(image, faces), 'boxes': faces}
+    
+    def save_face_from_video(self, id_sv, video):
+        capture = cv2.VideoCapture(video)
+        count = 0
+        while(capture.isOpened()):
+            # Capture frame-by-frame
+            ret, frame = capture.read()
+            if ret == True:
+                faces = self.detect(frame)['faces']
+                for face in faces:
+                    try:
+                        os.mkdir(f"./faces/{id_sv}")
+                        cv2.imwrite(f"./faces/{id_sv}/{count}.png", face)
+                        print('create and save face')
+                    except:
+                        cv2.imwrite(f"./faces/{id_sv}/{count}.png", face)
+                        print('save face')
+                    count += 1
+                if count > 4:
+                    break
+           # Break the loop
+            else:
+                break
 
 
 if __name__ == '__main__':

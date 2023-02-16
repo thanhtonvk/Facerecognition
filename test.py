@@ -8,7 +8,14 @@ conn.execute("""CREATE TABLE IF NOT EXISTS SinhVien(
 conn.execute("""CREATE TABLE IF NOT EXISTS DiemDanh(
     Id integer primary key AUTOINCREMENT,
     IdSinhVien integer NOT NULL,
-    NgayDiemDanh datetime NOT NULL
+    NgayDiemDanh text NOT NULL
 );""")
 conn.commit()
 conn.close()
+
+
+from dal.SinhVienDal import SinhVienDal
+dal = SinhVienDal()
+
+
+print(dal.get())
