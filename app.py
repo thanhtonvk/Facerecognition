@@ -61,9 +61,10 @@ def diem_danh():
     if request.method == 'POST':
         f = request.files['file']
         file_name = f.filename
+        print(file_name)
         save_path = os.path.join(app.config['UPLOAD_VIDEO']+"/images/", file_name)
         f.save(save_path)
-
+        
 
         # load image
         frame = cv2.imread(save_path)

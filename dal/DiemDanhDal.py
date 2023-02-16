@@ -15,13 +15,14 @@ def kiem_tra_diem_danh(id_sv, diem_danhs):
 
 class DiemDanhDal:
     def __init__(self):
-        self.conn = sqlite3.connect(config.DATABASE)
+        pass
 
     def get_by_date(self, ngay_diem_danh):
         query = "select DiemDanh.Id,HoTen,NgayDiemDanh,IdSinhVien from DiemDanh,SinhVien where SinhVien.Id = DiemDanh.IdSinhVien and DiemDanh.NgayDiemDanh = ?"
         diem_danhs = []
         try:
-            cur = self.conn.cursor()
+            conn = sqlite3.connect(config.DATABASE)
+            cur = conn.cursor()
             cur.execute(query, (ngay_diem_danh,))
             rows = cur.fetchall()
             for row in rows:
@@ -31,6 +32,7 @@ class DiemDanhDal:
                 diem_danh.NgayDiemDanh = row[2]
                 diem_danh.IdSinhVien = row[3]
                 diem_danhs.append(diem_danh)
+            conn.close()
             return diem_danhs
         except Exception as e:
             print(e)
@@ -40,7 +42,8 @@ class DiemDanhDal:
         query = "select DiemDanh.Id,HoTen,NgayDiemDanh,IdSinhVien from DiemDanh,SinhVien where SinhVien.Id = DiemDanh.IdSinhVien"
         diem_danhs = []
         try:
-            cur = self.conn.cursor()
+            conn = sqlite3.connect(config.DATABASE)
+            cur = conn.cursor()
             cur.execute(query)
             rows = cur.fetchall()
             for row in rows:
@@ -50,6 +53,7 @@ class DiemDanhDal:
                 diem_danh.NgayDiemDanh = row[2]
                 diem_danh.IdSinhVien = row[3]
                 diem_danhs.append(diem_danh)
+            conn.close()
             return diem_danhs
         except Exception as e:
             print(e)
@@ -59,10 +63,12 @@ class DiemDanhDal:
         query = "insert into DiemDanh(IdSinhVien,NgayDiemDanh) values(?,?)"
         if kiem_tra_diem_danh(id_sv):
             try:
+                conn = sqlite3.connect(config.DATABASE)
                 today = date.today()
                 current_date = today.strftime("%d/%m/%Y")
-                self.conn.execute(query, (id_sv, current_date,))
-                self.conn.commit()
+                conn.execute(query, (id_sv, current_date,))
+                conn.commit()
+                conn.close()
                 return True
             except Exception as e:
                 print(e)
