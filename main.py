@@ -1,18 +1,15 @@
 import cv2
-from PIL import ImageFont
-
+import unidecode
 from dal.NguoiDungDal import NguoiDungDal
 from modules.face_detection import FaceDetection
 from modules.face_recognition import FaceRecognition
-import unidecode
+
 if __name__ == '__main__':
     face_detector = FaceDetection()
     face_recognition = FaceRecognition()
-    font = ImageFont.truetype("C:\Windows\Fonts\\arial.ttf", 35)
 
     nguoi_dung_dal = NguoiDungDal()
     nguoi_dungs = nguoi_dung_dal.get()
-
 
     vid = cv2.VideoCapture(0)
     font = cv2.FONT_HERSHEY_SIMPLEX

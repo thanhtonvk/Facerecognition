@@ -1,6 +1,4 @@
-import PIL
 import numpy as np
-from PIL import Image as PilImage
 import cv2
 from config import config
 from modules.SCRFD import SCRFD
