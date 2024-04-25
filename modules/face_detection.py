@@ -1,46 +1,20 @@
 import cv2
 import os
-
-def get_model():
-    faceCascade = cv2.CascadeClassifier('./models/face_detection.xml')
-    return faceCascade
+from modules.FaceDetector import FaceDetector
 
 
-def preprocess(image):
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    return gray
-
-
-def crop_face(image, faces):
-    images = []
-    for (x, y, w, h) in faces:
-        x_min = x
-        y_min = y
-        x_max = x+w
-        y_max = y+h
-        images.append(image[y_min:y_max, x_min:x_max])
-    return images
-
-
-class FaceDetector:
+class FaceDetection:
     def __init__(self):
-        self.model = get_model()
+        self.model = FaceDetector()
 
     def detect(self, image):
-        gray_image = preprocess(image)
-        faces = self.model.detectMultiScale(
-            gray_image,
-            scaleFactor=1.1,
-            minNeighbors=5,
-            minSize=(15, 15),
-            flags=cv2.CASCADE_SCALE_IMAGE)
-        return {'faces': crop_face(image, faces), 'boxes': faces}
-    
+        faces, bboxes = self.model.detect(image)
+        return {'faces': faces, 'boxes': bboxes}
+
     def save_face_from_video(self, id_sv, video):
         capture = cv2.VideoCapture(video)
         count = 0
-        while(capture.isOpened()):
-            # Capture frame-by-frame
+        while (capture.isOpened()):
             ret, frame = capture.read()
             if ret == True:
                 faces = self.detect(frame)['faces']
@@ -53,14 +27,16 @@ class FaceDetector:
                         cv2.imwrite(f"./faces/{id_sv}/{count}.png", face)
                         print('save face')
                     count += 1
-                if count > 4:
+                if count > 3:
                     break
-           # Break the loop
             else:
                 break
 
 
 if __name__ == '__main__':
-    face_detector = FaceDetector()
-    image = cv2.imread('./test/test.jpg')
-    print(face_detector.detect(image))
+    import matplotlib.pyplot as plt
+    face_detection = FaceDetection()
+    image = cv2.imread('test/test2.jpg')
+    result = face_detection.detect(image)
+    plt.imshow(result['faces'][0])
+    plt.show()
