@@ -12,7 +12,17 @@ SEND_DATA = False
 
 
 if SEND_DATA:
-    from arduino import send_data
+    import serial
+    import time
+    NAME_COM = 'COM4'
+    PORT = 280301
+    dataSerial = serial.Serial(NAME_COM, PORT, timeout=.1)
+    def send_data(id):
+        time.sleep(3)
+        dataSerial.write(str(id).encode())
+        print('mo khoa ',id)
+        time.sleep(3)
+
 id = -1
 
 if __name__ == '__main__':
