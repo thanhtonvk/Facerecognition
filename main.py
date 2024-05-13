@@ -10,7 +10,6 @@ import threading
 
 SEND_DATA = False
 
-
 if SEND_DATA:
     import serial
     import time
@@ -19,8 +18,9 @@ if SEND_DATA:
     dataSerial = serial.Serial(NAME_COM, PORT, timeout=.1)
     def send_data(id):
         time.sleep(3)
-        dataSerial.write(str(id).encode())
-        print('mo khoa ',id)
+        dataSerial.write(bytes(id,  'utf-8'))
+        data = serial.readline()
+        print(data)
         time.sleep(3)
 
 id = -1
