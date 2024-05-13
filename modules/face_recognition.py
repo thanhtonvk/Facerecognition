@@ -35,13 +35,13 @@ class FaceRecognition:
     def search_face(self, current_face, nguoi_dungs):
         for nguoi_dung in nguoi_dungs:
             path = f"./faces/{nguoi_dung.Id}"
-            file_names = os.listdir(path)
-            for file in file_names:
-                face = cv2.imread(f"{path}/{file}")
-                cos_sim = self.compare(current_face, face)
-                print(cos_sim)
-                if cos_sim > 0.5:
-                    return nguoi_dung
+            if os.path.exists(path):
+                file_names = os.listdir(path)
+                for file in file_names:
+                    face = cv2.imread(f"{path}/{file}")
+                    cos_sim = self.compare(current_face, face)
+                    if cos_sim > 0.5:
+                        return nguoi_dung
         return None
 
 

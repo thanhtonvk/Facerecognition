@@ -19,14 +19,33 @@ def them_sv():
     if request.method == 'GET':
         return render_template('them_nguoi_dung.html')
     ho_ten = request.form['ho_ten']
-    NguoiDungDal.insert(ho_ten)
+    id = request.form['id']
+    NguoiDungDal.insert(ho_ten, id)
     NguoiDung = NguoiDungDal.get()[-1]
     f = request.files['file']
     file_name = f.filename
-    pathlib.Path.mkdir(app.config['UPLOAD_VIDEO'] + "/videos/" + str(NguoiDung.Id),exist_ok=True)
-    save_path = os.path.join(app.config['UPLOAD_VIDEO'] + "/videos/" + str(NguoiDung.Id), file_name)
+    pathlib.Path(app.config['UPLOAD_VIDEO'] + "/videos/" +
+                 str(NguoiDung.Id)).mkdir(exist_ok=True)
+    save_path = os.path.join(
+        app.config['UPLOAD_VIDEO'] + "/videos/" + str(NguoiDung.Id), file_name)
     f.save(save_path)
     faceDetector.save_face_from_video(NguoiDung.Id, save_path)
+    return redirect('/')
+
+
+@app.route('/nguoi-dung/them-qr', methods=['GET', 'POST'])
+def them_qr():
+    if request.method == 'GET':
+        return render_template('them_nguoi_dung_qr.html')
+    ho_ten = request.form['ho_ten']
+    id = request.form['id']
+    NguoiDungDal.insert(ho_ten, id)
+    NguoiDung = NguoiDungDal.get()[-1]
+    f = request.files['file']
+    file_name = f.filename
+    pathlib.Path("./qrs/" + str(NguoiDung.Id)).mkdir(exist_ok=True)
+    save_path = os.path.join("./qrs/" + str(NguoiDung.Id), file_name)
+    f.save(save_path)
     return redirect('/')
 
 
@@ -40,7 +59,6 @@ def xoa(id):
 def danh_sach_sv():
     NguoiDungs = NguoiDungDal.get()
     return render_template('danh_sach_nguoi_dung.html', NguoiDungs=NguoiDungs)
-
 
 
 if __name__ == '__main__':

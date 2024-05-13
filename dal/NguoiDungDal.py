@@ -8,11 +8,11 @@ class NguoiDungDal:
         pass
         
 
-    def insert(self, hoten):
+    def insert(self, hoten,id):
         try:
             conn = sqlite3.connect(config.DATABASE)
             conn.execute(
-                "INSERT INTO NguoiDung(HoTen) values(?)", (hoten,))
+                "INSERT INTO NguoiDung(HoTen,Id) values(?,?)", (hoten,id))
             conn.commit()
             conn.close()
             return True
@@ -44,7 +44,7 @@ class NguoiDungDal:
             return False
 
     def get(self):
-        sinh_viens = []
+        nguoi_dungs = []
         try:
             conn = sqlite3.connect(config.DATABASE)
             cur = conn.cursor()
@@ -54,9 +54,9 @@ class NguoiDungDal:
                 sv = NguoiDung()
                 sv.Id = row[0]
                 sv.HoTen = row[1]
-                sinh_viens.append(sv)
+                nguoi_dungs.append(sv)
             conn.close()
-            return sinh_viens
+            return nguoi_dungs
         except Exception as e:
             print('err ',e)
-            return sinh_viens
+            return nguoi_dungs
