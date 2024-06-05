@@ -27,7 +27,7 @@ class FaceDetection:
                         cv2.imwrite(f"./faces/{id_sv}/{count}.png", face)
                         print('save face')
                     count += 1
-                if count > 3:
+                if count > 1:
                     break
             else:
                 break

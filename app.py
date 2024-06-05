@@ -1,6 +1,6 @@
 import os
 from flask import Flask, render_template, request, redirect
-
+import cv2
 
 from dal.NguoiDungDal import NguoiDungDal
 from modules.face_detection import FaceDetection
@@ -21,31 +21,34 @@ def them_sv():
     ho_ten = request.form['ho_ten']
     id = request.form['id']
     NguoiDungDal.insert(ho_ten, id)
-    NguoiDung = NguoiDungDal.get()[-1]
+
     f = request.files['file']
     file_name = f.filename
     pathlib.Path(app.config['UPLOAD_VIDEO'] + "/videos/" +
-                 str(NguoiDung.Id)).mkdir(exist_ok=True)
+                 str(id)).mkdir(exist_ok=True)
     save_path = os.path.join(
-        app.config['UPLOAD_VIDEO'] + "/videos/" + str(NguoiDung.Id), file_name)
+        app.config['UPLOAD_VIDEO'] + "/videos/" + str(id), file_name)
     f.save(save_path)
-    faceDetector.save_face_from_video(NguoiDung.Id, save_path)
+    faceDetector.save_face_from_video(id, save_path)
     return redirect('/')
 
 
 @app.route('/nguoi-dung/them-qr', methods=['GET', 'POST'])
 def them_qr():
     if request.method == 'GET':
-        return render_template('them_nguoi_dung_qr.html')
+        return render_template('them_nguoi_dung_qr.html',name="")
     ho_ten = request.form['ho_ten']
     id = request.form['id']
-    NguoiDungDal.insert(ho_ten, id)
-    NguoiDung = NguoiDungDal.get()[-1]
     f = request.files['file']
-    file_name = f.filename
-    pathlib.Path("./qrs/" + str(NguoiDung.Id)).mkdir(exist_ok=True)
-    save_path = os.path.join("./qrs/" + str(NguoiDung.Id), file_name)
+    pathlib.Path("./qrs/" + str(id)).mkdir(exist_ok=True)
+    save_path = os.path.join("./qrs/" + str(id), 'qr.png')
     f.save(save_path)
+    qrCodeDetector = cv2.QRCodeDetector()
+    image = cv2.imread(save_path)
+    decodedText, points, _ = qrCodeDetector.detectAndDecode(image)
+    if points is None:
+        return render_template('them_nguoi_dung_qr.html',name="Không đọc được QR")
+    NguoiDungDal.insert(ho_ten, id)
     return redirect('/')
 
 

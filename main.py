@@ -9,19 +9,17 @@ import threading
 
 
 SEND_DATA = False
-
+import serial
+import time
+# NAME_COM = 'COM3'
+# PORT = 280301
+# dataSerial = serial.Serial(NAME_COM, PORT, timeout=.1)
 if SEND_DATA:
-    import serial
-    import time
-    NAME_COM = 'COM4'
-    PORT = 280301
-    dataSerial = serial.Serial(NAME_COM, PORT, timeout=.1)
     def send_data(id):
+        dataSerial.write(str(id).encode())
         time.sleep(3)
-        dataSerial.write(bytes(id,  'utf-8'))
-        data = serial.readline()
-        print(data)
-        time.sleep(3)
+        data = dataSerial.readline()
+        print(data.decode('utf-8'))
 
 id = -1
 
@@ -58,10 +56,10 @@ if __name__ == '__main__':
                         thread = threading.Thread(
                             target=send_data, args=(nguoi_dung.Id,))
                         thread.start()
+                        
                 else:
                     cv2.rectangle(frame, (x_min, y_min),
                                   (x_max, y_max), (0, 0, 255), 2)
-
         predict = face_detector.detect(frame)
         boxes = predict['boxes']
         faces = predict['faces']
@@ -76,7 +74,7 @@ if __name__ == '__main__':
                     thread = threading.Thread(
                         target=send_data, args=(nguoi_dung.Id,))
                     thread.start()
-        cv2.imshow('Nhan dien khuon mat', frame)
+        cv2.imshow('Auto lock', frame)
         count += 1
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
