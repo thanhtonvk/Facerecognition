@@ -3,7 +3,9 @@ import os
 
 
 class QRDetection:
+    # tải mô hình phát hiện QR và đọc QR
     qrCodeDetector = cv2.QRCodeDetector()
+    # phát hiện và đọc nội dung từ mã QR
 
     def detect(self, image):
         decodedText, points, _ = self.qrCodeDetector.detectAndDecode(image)
@@ -20,11 +22,14 @@ class QRDetection:
         y_max = max(y1, y2, y3, y4)
         return {'value': str(decodedText), 'bbox': (x_min, y_min, x_max, y_max)}
 
+# so khớp mã QR quét với các mã QR đã có trong CSDL, nếu trùng thì sẽ trả về ổ khóa tương ứng
     def search_qr(self, current_qr, nguoi_dungs):
+        # đọc nội dung từ QR
         current_result = self.detect(current_qr)
-        
+
         if current_result is not None:
             current_value = current_result.get('value')
+            # tìm kiếm và so khớp các mã QR khác trong CSDL 
             for nguoi_dung in nguoi_dungs:
                 path = f"qrs/{nguoi_dung.Id}"
                 if os.path.exists(path):

@@ -11,13 +11,16 @@ import threading
 SEND_DATA = False
 import serial
 import time
-# NAME_COM = 'COM3'
-# PORT = 280301
-# dataSerial = serial.Serial(NAME_COM, PORT, timeout=.1)
+
+# kết nối python với Ardunino 
+NAME_COM = 'COM3'
+PORT = 280301
+dataSerial = serial.Serial(NAME_COM, PORT, timeout=.1)
 if SEND_DATA:
+    # gửi số thứ tự khóa tới ardunio
     def send_data(id):
         dataSerial.write(str(id).encode())
-        time.sleep(3)
+        time.sleep(10)
         data = dataSerial.readline()
         print(data.decode('utf-8'))
 

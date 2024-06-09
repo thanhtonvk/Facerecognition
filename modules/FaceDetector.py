@@ -1,10 +1,11 @@
+# import các thư viện
 import numpy as np
 import cv2
 from config import config
 from modules.SCRFD import SCRFD
 from skimage import transform
 
-
+# căn chỉnh khuôn mặt cho thẳng
 def align_face(cv_img, dst, size=(112, 112)):
     src = np.array([
         [38.2946, 51.6963],
@@ -26,7 +27,7 @@ class FaceDetector:
         self.det_size = det_size
         self.model = SCRFD(model_file=config.MODEL_FACE_DETECTION)
         self.model.prepare()
-
+# phát hiện và cắt khuôn mặt từ ảnh
     def detect(
             self,
             np_image: np.ndarray,

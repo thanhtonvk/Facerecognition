@@ -1,5 +1,6 @@
 {
     "python.analysis.extraPaths": [
         "./confg"
-    ]
+    ],
+    "python.REPL.enableREPLSmartSend": false
 }
